@@ -1,0 +1,682 @@
+# The ontology should contain information related to the various stages in the
+# building of a ML pipeline, concept-to-code mappings, etc
+
+[ontology]
+    [ontology.components]  # concepts
+        [ontology.components.AbstractComponent]
+        [ontology.components.LoadData]
+        [ontology.components.LoadFile]
+        [ontology.components.LoadCSV]  # leaf
+        [ontology.components.LoadLazily]  # leaf
+
+        [ontology.components.PreprocessData]
+        [ontology.components.SplitDataAndTargets]  # leaf
+        [ontology.components.SplitData]
+        [ontology.components.SplitHoldout]  # leaf
+        [ontology.components.SplitCV]  # leaf
+        [ontology.components.SplitStratifiedCV]  # leaf
+
+        [ontology.components.FeatureOperation]
+        [ontology.components.FeatureSelection]
+        [ontology.components.NOP]  #leaf
+        [ontology.components.RandomFeatureSelection]  # leaf
+        [ontology.components.DirectFeatureSelection]  # leaf
+
+        [ontology.components.FeatureGeneration]
+        [ontology.components.ProductFeatures]  # leaf
+        [ontology.components.Kernelizer]  # leaf
+        [ontology.components.DFS]  # leaf
+        [ontology.components.FeatureProcessing]
+        [ontology.components.DimensionalityReduction]
+        [ontology.components.PCA]  # leaf]
+        [ontology.components.KernelPCA]  # leaf]
+        [ontology.components.FeatureNormalization]
+        [ontology.components.Standardizer]  # leaf
+        [ontology.components.FeatureEncoding]
+        [ontology.components.ContinuousEncoder]  # leaf
+        [ontology.components.OneHotEncoder]  # leaf
+        [ontology.components.FeatureImputation]
+        [ontology.components.FillImputer]  # leaf
+
+        [ontology.components.SelectModel]
+        [ontology.components.SelectSVC]  # leaf
+        [ontology.components.SelectLinearSVC]  # leaf
+        [ontology.components.SelectXGBoostClassifier]  # leaf
+
+        [ontology.components.ModelData]
+        [ontology.components.TrainModel]
+        [ontology.components.TrainClassifier]
+        [ontology.components.TrainSVC]  # leaf
+        [ontology.components.TrainLinearSVC]  # leaf
+        [ontology.components.TrainXGBoostClassifier]  # leaf
+
+        [ontology.components.EvalModel]
+        [ontology.components.EvalClassifier] #leaf
+
+
+    [ontology.preconditions]
+        [ontology.preconditions.AbstractPrecondition] # top precondition type
+        [ontology.preconditions.InputPrecondition]    # use or check inputs of pipeline components
+        [ontology.preconditions.DataPrecondition]     # data data inputs or utputs of the pipeline components
+        [ontology.preconditions.PipelinePrecondition] # use the symbolic pipeline structure data
+
+        [ontology.preconditions.CSVExtension]
+            function = "extension_check"
+            function_args = ["csv", "tsv"]
+
+        [ontology.preconditions.NoArgumentsForLoadData]
+            function = "op_arguments_check"
+            function_args = ["LoadData", []]
+
+        [ontology.preconditions.DataIsNumeric]
+            function = "dataframe_format_checker"
+            function_args = ["Real", "1", "1"]
+
+        [ontology.preconditions.PreviousOp_TrainSVC]
+            function = "previous_op"
+            function_args = ["TrainSVC"]
+
+        [ontology.preconditions.PreviousOp_TrainLinearSVC]
+            function = "previous_op"
+            function_args = ["TrainLinearSVC"]
+
+        [ontology.preconditions.PreviousOp_TrainXGBoostClassifier]
+            function = "previous_op"
+            function_args = ["TrainXGBoostClassifier"]
+
+        [ontology.preconditions.Selected_SVC]
+            function = "has_op"
+            function_args = ["SelectSVC"]
+
+        [ontology.preconditions.Selected_LinearSVC]
+            function = "has_op"
+            function_args = ["SelectLinearSVC"]
+
+        [ontology.preconditions.Selected_XGBoostClassifier]
+            function = "has_op"
+            function_args = ["SelectXGBoostClassifier"]
+
+        [ontology.preconditions.DataAndTargetsSplit]
+            function = "has_op"
+            function_args = ["SplitDataAndTargets"]
+
+        [ontology.preconditions.Kernelizer_not_applied]
+            function = "misses_op"
+            function_args = ["Kernelizer"]
+
+        [ontology.preconditions.PreviousOp_not_Kernelizer]
+            function = "previous_op_not"
+            function_args = ["Kernelizer"]
+
+        [ontology.preconditions.DataSizeDim2More2]
+            function = "data_size"
+            function_args = ["larger",3, 2] # at least 3 (features) on dim=2
+
+        [ontology.preconditions.DataSizeDim1More1000]
+            function = "data_size"
+            function_args = ["larger", 1000, 1] # at least 1000 (samples) on dim=1
+
+        [ontology.preconditions.DataIsLinearlySeparable]
+            function = "linear_separability"
+            function_args = 0.9
+
+        [ontology.preconditions.DataIsNotLinearlySeparable]
+            function = "linear_inseparability"
+            function_args = 0.9
+
+        [ontology.preconditions.RandomFeatureSpecificationCheck]
+            function = "random_feature_specification_check"
+            function_args = ""
+
+        [ontology.preconditions.DirectFeatureSpecificationCheck]
+            function = "direct_feature_specification_check"
+            function_args = ""
+
+        [ontology.preconditions.DFSArgumentsCheck]
+            function = "dfs_arguments_check"
+            function_args = ""
+
+        [ontology.preconditions.AlwaysTRUE]
+            function = "return_primer"
+            function_args = true
+
+        [ontology.preconditions.AlwaysFALSE]
+            function = "return_primer"
+            function_args = false
+
+    [ontology.relations.ISA]  # in each 2-element vector, (first)-[RELATION]->(second)
+        data = [
+                # components
+                ["LoadData", "AbstractComponent"],
+                ["LoadFile", "LoadData"],
+                ["LoadLazily", "LoadData"],
+                ["LoadCSV", "LoadFile"],
+
+                ["PreprocessData", "AbstractComponent"],
+                ["SplitDataAndTargets", "PreprocessData"],
+
+                ["FeatureOperation", "AbstractComponent"],
+
+                ["DFS", "FeatureOperation"],
+
+                ["FeatureSelection", "FeatureOperation"],
+                ["RandomFeatureSelection", "FeatureSelection"],
+                ["DirectFeatureSelection", "FeatureSelection"],
+
+                ["FeatureGeneration", "FeatureOperation"],
+                ["ProductFeatures", "FeatureGeneration"],
+                ["Kernelizer", "FeatureGeneration"],
+                ["NOP", "FeatureGeneration"],
+
+                ["FeatureProcessing", "FeatureOperation"],
+                ["DimensionalityReduction", "FeatureProcessing"],
+                ["PCA", "DimensionalityReduction"],
+                ["KernelPCA", "DimensionalityReduction"],
+                ### ["NOP", "DimensionalityReduction"], #<-- possible, same leaf having two or more parents
+                ["FeatureNormalization", "FeatureProcessing"],
+                ["Standardizer", "FeatureNormalization"],
+                ["FeatureEncoding", "FeatureProcessing"],
+                ["ContinuousEncoder", "FeatureEncoding"],
+                ["OneHotEncoder", "FeatureEncoding"],
+                ["FeatureImputation", "FeatureProcessing"],
+                ["FillImputer", "FeatureImputation"],
+
+                ["SplitData", "AbstractComponent"],
+                ["SplitHoldout", "SplitData"],
+                ["SplitCV", "SplitData"],
+                ["SplitStratifiedCV", "SplitData"],
+
+                ["SelectModel", "AbstractComponent"],
+                ["SelectSVC", "SelectModel"],
+                ["SelectLinearSVC", "SelectModel"],
+                ["SelectXGBoostClassifier", "SelectModel"],
+
+                ["ModelData", "AbstractComponent"],
+                ["TrainModel", "ModelData"],
+                ["TrainClassifier", "TrainModel"],
+                ["TrainXGBoostClassifier", "TrainClassifier"],
+                ["TrainSVC", "TrainClassifier"],
+                ["TrainLinearSVC", "TrainClassifier"],
+
+                ["EvalModel", "AbstractComponent"],
+                ["EvalClassifier", "EvalModel"],
+
+                # preconditions
+                ["InputPrecondition", "AbstractPrecondition"],
+                ["PipelinePrecondition", "AbstractPrecondition"],
+                ["DataPrecondition", "AbstractPrecondition"],
+
+                ["CSVExtension","InputPrecondition"],
+                ["NoArgumentsForLoadData","InputPrecondition"],
+                ["DataIsNumeric", "DataPrecondition"],
+                ["DataAndTargetsSplit", "DataPrecondition"],
+                ["DataIsLinearlySeparable", "DataPrecondition"],
+                ["DataIsNotLinearlySeparable", "DataPrecondition"],
+                ["DataSizeDim2More2", "DataPrecondition"],
+                ["DataSizeDim1More1000", "DataPrecondition"],
+                ["PreviousOp_TrainXGBoostClassifier", "PipelinePrecondition"],
+                ["PreviousOp_TrainSVC", "PipelinePrecondition"],
+                ["PreviousOp_TrainLinearSVC", "PipelinePrecondition"],
+                ["PreviousOp_not_Kernelizer", "PipelinePrecondition"],
+                ["Selected_SVC", "PipelinePrecondition"],
+                ["Selected_LinearSVC", "PipelinePrecondition"],
+                ["Selected_XGBoostClassifier", "PipelinePrecondition"],
+                ["Kernelizer_not_applied", "PipelinePrecondition"],
+
+                ["RandomFeatureSpecificationCheck", "InputPrecondition"],
+                ["DirectFeatureSpecificationCheck", "InputPrecondition"],
+                ["DFSArgumentsCheck", "InputPrecondition"],
+                ["AlwaysTRUE", "AbstractPrecondition"],
+                ["AlwaysFALSE", "AbstractPrecondition"],
+                ]
+
+    [ontology.relations.PRECONDITIONED_BY]
+        data = [
+                ["LoadCSV", "CSVExtension"],
+                ["LoadLazily", "NoArgumentsForLoadData"],
+                ["SplitHoldout", "DataAndTargetsSplit"],
+                ["SplitCV", "DataAndTargetsSplit"],
+                ["SplitStratifiedCV", "DataAndTargetsSplit"],
+
+                ["RandomFeatureSelection", "DataIsNumeric"],
+                ["RandomFeatureSelection", "DataAndTargetsSplit"],
+                ["RandomFeatureSelection", "RandomFeatureSpecificationCheck"],
+
+                ["DirectFeatureSelection", "DataIsNumeric"],
+                ["DirectFeatureSelection", "DataAndTargetsSplit"],
+                ["DirectFeatureSelection", "DirectFeatureSpecificationCheck"],
+
+                ["Kernelizer", "DataAndTargetsSplit"],
+                ["Kernelizer", "DataIsNumeric"],
+                #["Kernelizer", "Selected_SVC"],
+
+                ["ProductFeatures", "DataIsNumeric"],
+                ["ProductFeatures", "PreviousOp_not_Kernelizer"],
+
+                #["DFS", "DataAndTargetsSplit"],
+                ["DFS", "DataIsNumeric"],
+                ["DFS", "DFSArgumentsCheck"],
+
+                ["PCA", "DataAndTargetsSplit"],
+                ["PCA", "DataIsNumeric"],
+                ["PCA", "DataSizeDim2More2"],
+                ["KernelPCA", "DataAndTargetsSplit"],
+                ["KernelPCA", "DataIsNumeric"],
+                ["KernelPCA", "Kernelizer_not_applied"],
+                ["Standardizer", "DataIsNumeric"],
+                ["Standardizer", "DataAndTargetsSplit"],
+                ["ContinuousEncoder", "DataIsNumeric"],
+                ["OneHotEncoder", "DataIsNumeric"],
+
+                ["SelectXGBoostClassifier", "DataIsNotLinearlySeparable"],
+                #["SelectXGBoostClassifier", "DataSizeDim1More1000"],
+                ["SelectSVC", "DataIsNotLinearlySeparable"],
+                ["SelectLinearSVC", "DataIsLinearlySeparable"],
+
+                ["TrainSVC", "Selected_SVC"],
+                ["TrainSVC", "DataIsNumeric"],
+                ["TrainLinearSVC", "Selected_LinearSVC"],
+                ["TrainLinearSVC", "DataIsNumeric"],
+                ["TrainXGBoostClassifier", "Selected_XGBoostClassifier"],
+                ["TrainXGBoostClassifier", "DataIsNumeric"],
+               ]
+
+[resources]
+    [resources.code.preconditions]
+        # NOTE:
+        # • For preconditions, `state` is the component, a treepath (vector of CodeNode's) and
+        # the artifacts i.e. cache Dict with results of previous executions
+        #
+        # • The preconditions here are closures that take some state (first, closure argument) from the KB declaration above
+        # and store it for using in conjunction with the (second, inner function argument) state of the pipeline synthesys
+        # For example:
+        # ```(closure_arguments...)->begin        # here input data is taken from KB
+        #         (inner_arguments...)->begin     # here input data is taken from pipe synthesis state
+        #             # Body of function
+        #         end
+        #    end
+        # ```
+        [resources.code.preconditions.return_primer]
+            description = "Always returns true"
+            code = "(primer)->(state)->return primer"
+
+        [resources.code.preconditions.dataframe_format_checker]
+            description = "Checks properties of a DataFrame"
+            code = """(mtype, nfeatures, nsamples)->(state)-> begin
+                        _data = MLJ.matrix((state.piperesults[(state.pipeline[end]).id]).pipe_out);  # read results from last executed op
+                        T = eval(Symbol(mtype));
+                        coltypes = [eltype(c) for c in eachcol(_data)];
+                        return (all(x->x<:T, coltypes)) & (size(_data, 2) >= Meta.parse(nfeatures)) & (size(_data, 1) >=Meta.parse(nsamples));
+                      end
+                      """
+
+        [resources.code.preconditions.previous_op]
+            description = "Checks that the previous block is of specified type"
+            code = "(op)->(state)->(last(state.pipeline)).name == op"
+
+        [resources.code.preconditions.previous_op_not]
+            description = "Checks that the previous block is not of specified type"
+            code = "(op)->(state)->(last(state.pipeline)).name != op"
+
+        [resources.code.preconditions.has_op]
+            description = "Checks that the a specific block is in the pipeline"
+            code = "(op)->(state)->any(getproperty.(state.pipeline, :name) .== op)"
+
+        [resources.code.preconditions.misses_op]
+            description = "Checks that the a specific block is NOT in the pipeline"
+            code = "(op)->(state)->!any(getproperty.(state.pipeline, :name) .== op)"
+
+        [resources.code.preconditions.data_size]
+            description = "Checks wheter a condition on one of the dimensions is met"
+            code="""(args...)->(state)->begin
+                      c, s, dim = args;
+                      _data = (state.piperesults[(state.pipeline[end]).id]).pipe_out;
+                      ddim = size(_data, dim)
+                      c=="larger" ? ddim >= s : ddim < s;
+                      end
+                 """
+
+        [resources.code.preconditions.extension_check]
+            description = "Checks for an extension"
+            code = """(extensions...)->(state)->begin
+                      _ext = split(replace(state.component.metadata.arguments[2], \"\\\"\"=>""), \".\")[end]
+                      return _ext in extensions
+                      end
+                   """
+
+        [resources.code.preconditions.op_arguments_check]
+            description = "Checks the input artuments of the specified operation"
+            code = """
+                   (args...)->(state)->begin
+                        opname, argv = args;
+                        return last(split(string(state.component), ".")) == opname && state.component.metadata.arguments == argv;
+                   end
+                   """
+
+        [resources.code.preconditions.linear_separability]
+            description = "Checks if data is linearly separable (2 classes)"
+            code = """(frac)->(state)->begin
+                        _data = (state.piperesults[(state.pipeline[end]).id]).pipe_out;  # read results from last executed op
+                        _targets = (state.piperesults[(state.pipeline[end]).id]).targets; # read results from last executed op
+                        targets = Kdautoml.df2vec(_targets); # extract first column out of df as vec
+                        data = MLJ.matrix(_data)';
+                        return Kdautoml.xor_linear_separability(data, targets, frac);
+                      end
+                   """
+
+        [resources.code.preconditions.linear_inseparability]
+            description = "Checks if data is linearly separable (2 classes)"
+            code = """(frac)->(state)->begin
+                        _data = (state.piperesults[(state.pipeline[end]).id]).pipe_out;  # read results from last executed op
+                        _targets = (state.piperesults[(state.pipeline[end]).id]).targets; # read results from last executed op
+                        targets = Kdautoml.df2vec(_targets); # extract first column out of df as vec
+                        data = MLJ.matrix(_data)';
+                        return !Kdautoml.xor_linear_separability(data, targets, frac);
+                      end
+                   """
+
+        [resources.code.preconditions.random_feature_specification_check]
+            description = "Checks that the specified random feature specification is correct"
+            code = """(args...)->(state)->begin
+                        args = state.component.metadata.arguments
+                        if !isempty(args)
+                            return (args[1] == \"random\") && (typeof(args[2]) <: Int) && (typeof(args[3]) <: Int) && length(args) == 3
+                        else
+                            return false
+                        end
+                      end
+                   """
+
+        [resources.code.preconditions.direct_feature_specification_check]
+            description = "Checks that the specified direct feature specification is correct"
+            code = """(args...)->(state)->begin
+                        args = state.component.metadata.arguments
+                        if !isempty(args)
+                            return (args[1] == \"direct\") && (typeof(args[2]) <: Tuple) && length(args) == 2
+                        else
+                            return false
+                        end
+                      end
+                   """
+
+        [resources.code.preconditions.dfs_arguments_check]
+            description = "Checks that arguments for Deep Features Synthesis make sense"
+            code = """(args...)->(state)->begin
+                        args = state.component.metadata.arguments
+                        if !isempty(args)
+                            return (typeof(args[1]) <: String) && isfile(Meta.parse(args[1])) && (typeof(args[2]) <: Int) && (typeof(args[3]) <: Bool) && length(args) == 3
+                        else
+                            return false
+                        end
+                      end
+                   """
+
+    [resources.code.components]
+        # Function wrapper signature and template is:
+        #  (memory, hyperparameters, args...) -> begin
+        #       -> Some code where main functionality is implemented;
+        #       -> Another code where 'memory' i.e. the MutableNamedTuple is assembled and returned;
+        #  end
+        #
+        [resources.code.components.LoadLazily]
+            description = "Does not load data, adds a source placeholder to the pipe. Activated if loading data operations have no arguments"
+            code = """
+                     (memory, _, args...)->begin;
+                            return MutableNamedTuple(;NamedTuple(memory)..., data=MLJ.source(), pipe_out=nothing);
+                     end;
+                 """
+        [resources.code.components.LoadCSV]
+            description = "Loads a .CSV file into a sourced DataFrame"
+            package = ["CSV", "MLJ"]
+            code = """
+                     (memory, _, header, filepath, args...)->begin;
+                            df = CSV.read(filepath, DataFrame; header=header);
+                            return MutableNamedTuple(;NamedTuple(memory)..., data=MLJ.source(df), pipe_out=df);
+                     end;
+                 """
+
+        [resources.code.components.SplitDataAndTargets]
+            description = "Splits data into data and targets"
+            code = """
+                     (memory, _, data_columns::Vector{Int}, args...)->begin
+                            data = memory.data.data;
+                            (n, m) = size(data);
+                            numdata = getindex(data, :, data_columns);
+                            targets = getindex(data, :, setdiff(1:m, data_columns));
+                            return MutableNamedTuple(;NamedTuple(memory)..., data=MLJ.source(numdata), targets=MLJ.source(targets), pipe_out=numdata);
+                     end
+                 """
+
+        [resources.code.components.NOP]
+            description = "A feature operation that does nothing (nop)"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, x->x);
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                     end
+                 """
+
+        [resources.code.components.RandomFeatureSelection]
+            description = "Selects features from an exact specification"
+            code = """
+                     (memory, _, selected_features, args...)->begin
+                            selected_columns = getindex(propertynames(memory.pipe_out), selected_features);
+                            push!(memory.pipeline, FeatureSelector(features=selected_columns, ignore=false));
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                     end
+                 """
+
+        [resources.code.components.DirectFeatureSelection]
+            description = "Selects features from an exact specification"
+            package = "MLJ"
+            code = """
+                     (memory, _, selected_features, args...)->begin
+                            selected_columns = getindex(propertynames(memory.pipe_out), selected_features);
+                            push!(memory.pipeline, FeatureSelector(features=selected_columns, ignore=false));
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                     end
+                 """
+
+        [resources.code.components.ProductFeatures]
+            description = "Adds new features defined as products of existing features"
+            code = """
+                     (memory, hyperparameters, args...; C=2)->begin
+                            push!(memory.pipeline, Kdautoml.FeatureProduct(C));
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                     end
+			     """
+
+        [resources.code.components.Kernelizer]
+            description = "A simple linear kernelizer"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, Kdautoml.Kernelizer);
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+			     """
+
+        [resources.code.components.DFS]
+            description = "The 'Deep Feature Synthesis' feature engine"
+            package = "DataFrames"
+            code = """
+                     (memory, _, args...)->begin
+                            dfs_kb_path, max_depth, calculate = args[1:3];
+                            push!(memory.pipeline, Kdautoml.DeepFeatureSynthesis.DeepFeatureSynthesisTransformer(dfs_kb_path, max_depth, calculate));
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end;
+			     """
+
+        [resources.code.components.PCA]
+            description = "Principal Component Analysis"
+            package = ["MLJ", "MLJMultivariateStatsInterface"]
+            #hyperparameters = ["(name=:maxoutdim, lower=1, upper=4)"]
+            code = """
+                     (memory, hyperparameters, args...)->begin
+                            push!(memory.pipeline, PCA(maxoutdim=2));
+                            try
+                                if hyperparameters !== nothing
+                                    for hyper in hyperparameters
+                                        push!(memory.hyperparameters, (idx=length(memory.pipeline), hyperparams=eval(Meta.parse(hyper))));
+                                    end;
+                                end;
+                            catch
+                            end;
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+                 """
+
+        [resources.code.components.KernelPCA]
+            description = "Kernel Principal Component Analysis"
+            package = ["MLJ", "MLJMultivariateStatsInterface"]
+            #hyperparameters = ["(name=:maxoutdim, lower=1, upper=4)"]
+            code = """
+                     (memory, hyperparameters, args...)->begin
+                            push!(memory.pipeline, KernelPCA(maxoutdim=2, kernel=Kdautoml.rbf_kernel(0.4)));
+                            try
+                                if hyperparameters !== nothing
+                                    for hyper in hyperparameters
+                                        push!(memory.hyperparameters, (idx=length(memory.pipeline), hyperparams=eval(Meta.parse(hyper))));
+                                    end;
+                                end;
+                            catch
+                            end;
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+                 """
+
+        [resources.code.components.Standardizer]
+            description = "Standard normalizer"
+            package = "Statistics"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, Standardizer());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+			     """
+
+        [resources.code.components.ContinuousEncoder]
+            description = "Encoder for continuous variables"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, ContinuousEncoder());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                     end
+			     """
+
+        [resources.code.components.OneHotEncoder]
+            description = "Encoder for continuous variables"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, OneHotEncoder());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+			     """
+
+        [resources.code.components.FillImputer]
+            description = "Missing value filling"
+            code = """
+                     (memory, _, args...)->begin
+                            push!(memory.pipeline, FillImputer());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory));
+                      end
+			     """
+
+        [resources.code.components.SplitHoldout]
+            description = "Classic holdout train/test split"
+            code = """
+                     (memory, hyperparameters, fraction_train=0.5, shuffle=true, args...)-> begin
+                            return MutableNamedTuple(;NamedTuple(memory)..., split=Holdout(;fraction_train, shuffle));
+                     end
+                 """
+
+        [resources.code.components.SplitCV]
+            description = "Cross-validation train/test split"
+            code = """
+                     (memory, _, nfolds, shuffle, args...)-> begin
+                            return MutableNamedTuple(;NamedTuple(memory)..., split=CV(;nfolds, shuffle));
+                     end
+                 """
+
+        [resources.code.components.SplitStratifiedCV]
+            description = "Stratified cross-validation train/test split"
+            code = """
+                     (memory, hyperparameters, nfolds=5, shuffle=true, args...)-> begin
+                            return MutableNamedTuple(;NamedTuple(memory)..., split=StratifiedCV(;nfolds, shuffle));
+                     end
+                 """
+
+        [resources.code.components.SelectSVC]
+            description = "Selects an SVC classifier"
+            package = "MLJ"
+            code = "(memory, args...)->memory"
+
+        [resources.code.components.SelectLinearSVC]
+            description = "Selects a LinearSVC classifier"
+            package = "MLJ"
+            code = "(memory, args...)->memory"
+
+        [resources.code.components.SelectXGBoostClassifier]
+            description = "Selects a XGBoost classifier"
+            package = "MLJ"
+            code = "(memory, args...)->memory"
+
+        [resources.code.components.TrainSVC]
+            description = "Trains a SVC classifier"
+            package = ["MLJLIBSVMInterface", "LIBSVM.Kernel"]
+            #hyperparameters = ["(name=:cost, lower=0.1, upper=5)",
+            #                   "(name=:kernel, values=[Kernel.Polynomial, Kernel.RadialBasis])"]
+            code ="""
+                    (memory, hyperparameters, args...)->begin
+                            push!(memory.pipeline, SVC());
+                            try
+                                if hyperparameters !== nothing
+                                    for hyper in hyperparameters
+                                        push!(memory.hyperparameters, (idx=length(memory.pipeline), hyperparams=eval(Meta.parse(hyper))));
+                                    end;
+                                end;
+                            catch
+                            end;
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory; measures=Accuracy()));
+                    end
+                """
+
+        [resources.code.components.TrainLinearSVC]
+            description = "Trains a LinearSVC classifier"
+            package = ["MLJLIBSVMInterface"]
+            code ="""
+                    (memory, _, args...)->begin
+                            push!(memory.pipeline, LinearSVC());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory; measures=Accuracy()));
+                    end
+                """
+
+        [resources.code.components.TrainXGBoostClassifier]
+            description = "Trains a XGBoost classifier"
+            package = ["MLJXGBoostInterface"]
+            code ="""
+                    (memory, _, args...)->begin
+                            push!(memory.pipeline, XGBoostClassifier());
+                            return MutableNamedTuple(;NamedTuple(memory)..., pipe_out=build_and_run_ml_pipeline(memory; measures=LogLoss()));
+                    end
+                """
+
+        #TODO: Implement a more advanced way of adapting:
+        #      `prediction_type` <--> processing of classifier outputs i.e. additional pipe operations <--> evaluation measure
+        #      to the type of measure the evaluation uses
+        [resources.code.components.EvalClassifier]
+            description = "Adds the evaluation of the method"
+            code = """
+                    (memory, _, measure, args...)->begin
+                            _measure = @eval $(measure);
+                            _pipe = if _measure==log_loss
+                                Pipeline(memory.pipeline..., Kdautoml.change_into_UnivariateFinite; prediction_type=:probabilistic);
+                            elseif measure==:accuracy
+                                Pipeline(memory.pipeline...);
+                            else
+                                Pipeline(memory.pipeline...);
+                            end;
+                            mach = machine(_pipe, memory.data.data, coerce(Kdautoml.df2vec(memory.targets), Multiclass));
+                            emach = evaluate!(mach, resampling=memory.split, measure=_measure);
+                            return MutableNamedTuple(;NamedTuple(memory)..., evaluation=emach);
+                    end
+                """

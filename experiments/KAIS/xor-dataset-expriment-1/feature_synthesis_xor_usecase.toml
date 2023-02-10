@@ -1,0 +1,354 @@
+[ontology]
+    [ontology.components]  # concepts
+        [ontology.components.AbstractComponent]
+
+        # Features
+        [ontology.components.AbstractFeature]
+        [ontology.components.IdentityFeature]
+        [ontology.components.EntityFeature]
+        [ontology.components.DirectFeature]
+        [ontology.components.ReverseFeature]
+
+        [ontology.components.AbstractFeatureComponent]
+
+        [ontology.components.ScalarGetter]
+        [ontology.components.ScalarDataFrameGetter]  # leaf
+        [ontology.components.ScalarFeatureGetter]    # leaf
+
+        [ontology.components.TensorGetter]
+        [ontology.components.TensorDataFrameColumnGetter]  # leaf
+        [ontology.components.TensorDataFrameRowGetter]  # leaf
+        [ontology.components.TensorFeatureDictColumnGetter]       # leaf
+        [ontology.components.TensorFeatureDictRowGetter]       # leaf
+
+        [ontology.components.TensorConditioner]
+        [ontology.components.TensorConditioner_NoCondition]            # leaf
+        [ontology.components.TensorConditioner_ValEqConditionDirect]   # leaf
+        [ontology.components.TensorConditioner_ValEqConditionReverse]  # leaf
+
+        [ontology.components.TensorFilter]
+        [ontology.components.TensorFilter_Classic]  # leaf
+
+        [ontology.components.TensorReducer]
+        [ontology.components.TensorReducer_Number]      # leaf
+        [ontology.components.TensorReducer_StringLike]  # leaf
+
+        [ontology.components.ScalarReducer]
+        [ontology.components.ScalarReducer_from_Scalar_Number]      # leaf
+        [ontology.components.ScalarReducer_from_Tensor_Number]      # leaf
+        [ontology.components.ScalarReducer_from_Scalar_StringLike]  # leaf
+        [ontology.components.ScalarReducer_from_Tensor_StringLike]  # leaf
+
+    [ontology.preconditions]
+        [ontology.preconditions.AbstractPrecondition]
+
+        [ontology.preconditions.InputTypeCheck_DataFrame]
+            function = "input_type_check"
+            function_args = ["DataFrame"]
+
+        [ontology.preconditions.InputTypeCheck_FeaturesDict]
+            function = "input_type_check"
+            function_args = ["Dict"]
+
+        [ontology.preconditions.FeatureTypeCheck_IdentityFeature]
+            function = "feature_type_check"
+            function_args = ["Kdautoml.DeepFeatureSynthesis.IdentityFeature"]
+
+        [ontology.preconditions.FeatureTypeCheck_EntityFeature]
+            function = "feature_type_check"
+            function_args = ["Kdautoml.DeepFeatureSynthesis.EntityFeature"]
+
+        [ontology.preconditions.FeatureTypeCheck_IdentityOrEntityFeature]
+            function = "feature_type_check"
+            function_args = ["Union{Kdautoml.DeepFeatureSynthesis.IdentityFeature, Kdautoml.DeepFeatureSynthesis.EntityFeature}"]
+
+        [ontology.preconditions.FeatureTypeCheck_DirectFeature]
+            function = "feature_type_check"
+            function_args = ["Kdautoml.DeepFeatureSynthesis.DirectFeature"]
+
+        [ontology.preconditions.FeatureTypeCheck_ReverseFeature]
+            function = "feature_type_check"
+            function_args = ["Kdautoml.DeepFeatureSynthesis.ReverseFeature"]
+
+        [ontology.preconditions.InputElementTypeTypeCheck_Number]
+            function = "element_type_check"
+            function_args = ["Number"]
+
+        [ontology.preconditions.InputElementTypeTypeCheck_StringLike]
+            function = "element_type_check"
+            function_args = ["Union{Symbol, <:AbstractString}"]
+
+        [ontology.preconditions.FeatureUseTensorsIsTrue]
+            function = "use_tensors_check"
+            function_args = true
+
+        [ontology.preconditions.FeatureUseTensorsIsFalse]
+            function = "use_tensors_check"
+            function_args = false
+
+        [ontology.preconditions.AlwaysTRUE]
+            function = "return_primer"
+            function_args = true
+
+    [ontology.relations.ISA]  # in each 2-element vector, (first)-[RELATION]->(second)
+        data = [
+                # top components
+                ["AbstractFeature", "AbstractComponent"],
+                ["AbstractFeatureComponent", "AbstractComponent"],
+                ["IdentityFeature", "AbstractFeature"],
+                ["EntityFeature", "AbstractFeature"],
+                ["DirectFeature", "AbstractFeature"],
+                ["ReverseFeature", "AbstractFeature"],
+                # Scalar getters
+                ["ScalarGetter", "AbstractFeatureComponent"],
+                ["ScalarDataFrameGetter", "ScalarGetter"],
+                ["ScalarFeatureGetter", "ScalarGetter"],
+                # Tensor getters
+                ["TensorGetter", "AbstractFeatureComponent"],
+                ["TensorDataFrameColumnGetter", "TensorGetter"],
+                ["TensorDataFrameRowGetter", "TensorGetter"],
+                ["TensorFeatureDictColumnGetter", "TensorGetter"],
+                ["TensorFeatureDictRowGetter", "TensorGetter"],
+                # Tensor conditioners
+                ["TensorConditioner", "AbstractFeatureComponent"],
+                ["TensorConditioner_NoCondition", "TensorConditioner"],
+                ["TensorConditioner_ValEqConditionDirect", "TensorConditioner"],
+                ["TensorConditioner_ValEqConditionReverse", "TensorConditioner"],
+                # Tensor filters
+                ["TensorFilter", "AbstractFeatureComponent"],
+                ["TensorFilter_Classic", "TensorFilter"],
+                # Tensor reducers
+                ["TensorReducer", "AbstractFeatureComponent"],
+                ["TensorReducer_Number", "TensorReducer"],
+                ["TensorReducer_StringLike", "TensorReducer"],
+                # Scalar reducers
+                ["ScalarReducer", "AbstractFeatureComponent"],
+                ["ScalarReducer_from_Scalar_Number", "ScalarReducer"],
+                ["ScalarReducer_from_Tensor_Number", "ScalarReducer"],
+                ["ScalarReducer_from_Scalar_StringLike", "ScalarReducer"],
+                ["ScalarReducer_from_Tensor_StringLike", "ScalarReducer"],
+                # preconditions
+                #["AbstractPrecondition", "AbstractComponent"],
+                ["InputTypeCheck_DataFrame","AbstractPrecondition"],
+                ["InputTypeCheck_FeaturesDict","AbstractPrecondition"],
+                ["FeatureTypeCheck_IdentityFeature","AbstractPrecondition"],
+                ["FeatureTypeCheck_EntityFeature","AbstractPrecondition"],
+                ["FeatureTypeCheck_DirectFeature","AbstractPrecondition"],
+                ["FeatureTypeCheck_ReverseFeature","AbstractPrecondition"],
+                ["InputElementTypeTypeCheck_Number", "AbstractPrecondition"],
+                ["InputElementTypeTypeCheck_StringLike", "AbstractPrecondition"],
+                ["FeatureUseTensorsIsTrue", "AbstractPrecondition"],
+                ["FeatureUseTensorsIsFalse", "AbstractPrecondition"],
+                ["AlwaysTRUE", "AbstractPrecondition"],
+               ]
+
+    [ontology.relations.PRECONDITIONED_BY]
+        data = [
+                ["ScalarDataFrameGetter", "InputTypeCheck_DataFrame"],
+                ["ScalarFeatureGetter", "InputTypeCheck_FeaturesDict"],
+
+                ["TensorDataFrameColumnGetter", "InputTypeCheck_DataFrame"],
+                ["TensorDataFrameRowGetter", "InputTypeCheck_DataFrame"],
+                ["TensorFeatureDictColumnGetter", "InputTypeCheck_FeaturesDict"],
+                ["TensorFeatureDictRowGetter", "InputTypeCheck_FeaturesDict"],
+
+                #TODO: Add pre-condition symbolic formula nodes (replacing simple for preconditions)
+                #      For example, TensorConditioner_NoCondition requires either type of feature not both
+                #["TensorConditioner_NoCondition", "FeatureTypeCheck_IdentityFeature"],
+                #["TensorConditioner_NoCondition", "FeatureTypeCheck_EntityFeature"],
+                ["TensorConditioner_NoCondition", "FeatureTypeCheck_IdentityOrEntityFeature"],
+                ["TensorConditioner_ValEqConditionDirect", "FeatureTypeCheck_DirectFeature"],
+                ["TensorConditioner_ValEqConditionReverse", "FeatureTypeCheck_ReverseFeature"],
+
+                ["TensorReducer_Number", "InputElementTypeTypeCheck_Number"],
+                ["TensorReducer_StringLike", "InputElementTypeTypeCheck_StringLike"],
+
+                ["ScalarReducer_from_Scalar_Number", "InputElementTypeTypeCheck_Number"],
+                ["ScalarReducer_from_Scalar_Number", "FeatureUseTensorsIsFalse"],
+                ["ScalarReducer_from_Tensor_Number", "InputElementTypeTypeCheck_Number"],
+                ["ScalarReducer_from_Tensor_Number", "FeatureUseTensorsIsTrue"],
+                ["ScalarReducer_from_Scalar_StringLike", "InputElementTypeTypeCheck_StringLike"],
+                ["ScalarReducer_from_Scalar_StringLike", "FeatureUseTensorsIsFalse"],
+                ["ScalarReducer_from_Tensor_StringLike", "InputElementTypeTypeCheck_StringLike"],
+                ["ScalarReducer_from_Tensor_StringLike", "FeatureUseTensorsIsTrue"],
+               ]
+
+    [ontology.relations.HASA]
+        data = [
+                # Identity features
+                # Note: the scalar reducer is hardcoded as the identity function
+                ["IdentityFeature", "ScalarGetter"],
+
+                # Entity features
+                # Note: is tensors are not used, some of the functions will not be used
+                #       as there are two different types of ASTs involved
+                ["EntityFeature", "ScalarGetter"],
+                ["EntityFeature", "ScalarReducer"],
+                ["EntityFeature", "TensorGetter"],
+                ["EntityFeature", "TensorConditioner"],
+                ["EntityFeature", "TensorFilter"],
+                ["EntityFeature", "TensorReducer"],
+
+                # Direct features
+                ["DirectFeature", "TensorGetter"],
+                ["DirectFeature", "TensorConditioner"],
+
+                # Reverse features
+                ["ReverseFeature", "ScalarGetter"],
+                ["ReverseFeature", "ScalarReducer"],
+                ["ReverseFeature", "TensorGetter"],
+                ["ReverseFeature", "TensorConditioner"],
+                ["ReverseFeature", "TensorReducer"]
+               ]
+
+[resources]
+    [resources.code.preconditions]
+        [resources.code.preconditions.return_primer]
+            description = "Always returns true"
+            code = "(primer)->(state)->return primer"
+
+        [resources.code.preconditions.use_tensors_check]
+            description = "Checks for an extension"
+            code = """(primer)->(query_data)->begin
+                          return query_data.use_vectors == primer
+                      end
+                   """
+
+        [resources.code.preconditions.input_type_check]
+            description = "Checks for an extension"
+            code = """(input_type)->(query_data)->begin
+                          return query_data.input_data isa eval(Meta.parse(input_type))
+                      end
+                   """
+
+        [resources.code.preconditions.feature_type_check]
+            description = "Checks that the feature type matches a specific one"
+            code = """(feature_type)->(query_data)->begin
+                          return query_data.feature_type <: eval(Meta.parse(feature_type))
+                      end
+                   """
+
+        [resources.code.preconditions.element_type_check]
+            description = "Checks that the element type matches a specific one"
+            code = """(element_type)->(query_data)->begin
+                          return query_data.input_eltype <: eval(Meta.parse(element_type))
+                      end
+                   """
+
+    [resources.code.components]
+        # All components are closures that take as input the query data
+        # and return a vector of function expressions (AST components)
+        # that employ various parts of the query data in their code
+        [resources.code.components.ScalarDataFrameGetter]
+            description = "Loads a value from an input DataFrame"
+            #package = "DelimitedFiles"
+            code = """(query_data) ->[:((df, idx) -> df[!, Symbol($(string(query_data.input_feature)))][idx]),
+                                     ]
+                   """
+
+        [resources.code.components.ScalarFeatureGetter]
+            description = "Loads a value from an input Dict (that holds calculated features)"
+            #package = "DelimitedFiles"
+            code = """(query_data) -> [:((d, idx) -> d[Symbol($(string(query_data.input_feature)))].values[idx]),
+                                      ]
+                   """
+
+        [resources.code.components.TensorDataFrameColumnGetter]
+            description = "Loads a tensor (vector) from an input DataFrame"
+            #package = "DelimitedFiles"
+            code = """(query_data) ->[:((df, idx) -> df[!, Symbol($(string(query_data.input_feature)))]),
+                                     ]
+                   """
+
+        [resources.code.components.TensorDataFrameRowGetter]
+            description = "Loads a tensor (vector) from an input DataFrame"
+            #package = "DelimitedFiles"
+            code = """(query_data) ->[:((df, idx) -> df[idx, :]),
+                                     ]
+                   """
+
+        [resources.code.components.TensorFeatureDictColumnGetter]
+            description = "Loads a tensor (vector) from an input Dict (that holds calculated features)"
+            #package = "DelimitedFiles"
+            code = """(query_data) -> [:((d, idx) -> d[Symbol($(string(query_data.input_feature)))].values),
+                                      ]
+                   """
+
+        [resources.code.components.TensorFeatureDictRowGetter]
+            description = "Loads a tensor (vector) from an input Dict (that holds calculated features)"
+            #package = "DelimitedFiles"
+            code = """(query_data) -> [:((d, idx) -> [v.values[idx] for (k,v) in d]),
+                                      ]
+                   """
+
+        [resources.code.components.TensorConditioner_NoCondition]
+            description = "Returns a function that always returns true i.e. no filtering is done on input"
+            #package = "DelimitedFiles"
+            code = """(query_data) -> [:((args...)->true),
+                                      ]
+                   """
+        [resources.code.components.TensorConditioner_ValEqConditionDirect]
+            #TODO(Optional): See that 'data' (the symbol name for input data in the feature AST) correponding to the DATA_SYMBOL code global gets taken from code
+            description = "Returns the condition code for value equality in direct features"
+            code = """
+                    (query_data) -> [ :(data[Symbol($(string(query_data.agg_column)))].values .== data[Symbol($(string(query_data.mask_column)))].values[idx]),
+                                    ]
+                   """
+
+        [resources.code.components.TensorConditioner_ValEqConditionReverse]
+            description = "Returns the condition code for value equality in direct features"
+            code = """
+                    (query_data) -> [ :(data[Symbol($(string(query_data.agg_column)))].values[idx] .== data[Symbol($(string(query_data.mask_column)))].values),
+                                    ]
+                   """
+
+        [resources.code.components.TensorFilter_Classic]
+            description = "Returns the code for applying a filtering function"
+            code = """
+                    (query_data) -> [ :((c,x) -> filter(c, x)),
+                                    ]
+                   """
+        [resources.code.components.TensorReducer_Number]
+            description = "Reduces numeric tensors (vectors) to scalars"
+            code = """
+                    (query_data) -> [ :(x -> prod(x)),
+                                      :(x -> sum(x)),
+                                    ]
+                   """
+
+        [resources.code.components.TensorReducer_StringLike]
+            description = "Reduces numeric tensors (vectors) to scalars"
+            code = """
+                    (query_data) -> [ :(x -> length(x)),
+                                    ]
+                   """
+
+        [resources.code.components.ScalarReducer_from_Scalar_Number]
+            description = "Takes in a scalar and returns a scalar"
+            code = """
+                    (query_data) -> [ :(x -> x),
+                                    ]
+                   """
+
+        [resources.code.components.ScalarReducer_from_Tensor_Number]
+            description = "Takes in a scalar and a tensor and returns a scalar"
+            code = """
+                    (query_data) -> [ :((x,y) -> y),
+                                    ]
+
+                   """
+
+        [resources.code.components.ScalarReducer_from_Scalar_StringLike]
+            description = "Takes in a string-like returns a scalar"
+            code = """
+                    (query_data) -> [ :(x -> length(string(x)))
+                                    ]
+                   """
+
+        [resources.code.components.ScalarReducer_from_Tensor_StringLike]
+            description = "Takes in a string-like and a tensor of string-likes and returns scalar"
+            code = """
+                    (query_data) -> [ :((x,y) -> 0),
+                                    ]
+
+                   """
