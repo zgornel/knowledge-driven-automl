@@ -75,6 +75,10 @@ The feature synthesis knowledge base remains the one present in `data/knowledge/
 ```
 
 
+## Printing or accessing the experimental results
+Once an experiment job finishes, the results are serialized in the current directory in a file called either `_results_xor_experiment.bin` or `_results_circles_experiment.bin` respectively. The `print_results.jl` scripts corrsponding to each experiment can be ran to print the pipeline space or pipeline space statistics extracted from the serialized data. The file also provides insights into how to access the results. The `.bin` file needs to be in the same directory as the `print_results.jl` file.
+
+
 ## Monitoring the pipeline space growth
 Monitoring the pipeline building progress (pipeline space evolution) can be done with
 `watch -n 0.1 cat __tree__` where `__tree__` is a file that is iteratively updated with a printout of the state of the pipelines during synthesis.
