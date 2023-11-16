@@ -1,12 +1,12 @@
 # Knowledge-driven AutoML
 
-This is a repository that contains the knowledge bases and experimetal scripts for testing out [Kdautoml.jl](https://gitlab.ai.vub.ac.be/applied-projects/Kdautoml.jl)
+This is a repository that contains the knowledge bases and experimetal scripts for testing out [Kdautoml.jl](https://github.com/zgornel/Kdautoml.jl)
 
 ## Installation
 The steps detailed below suppose that one has installed [docker](https://www.docker.com/), [julia](https://julialang.org/) on a unix-like system such as GNU/Linux.
 
 Installation can be performed by:
- - cloning the repository with `git clone https://gitlab.ai.vub.ac.be/ccofaru/knowledge-driven-automl`
+ - cloning the repository with `git clone https://github.com/zgornel/knowledge-driven-automl/`
  - get the `Kdautoml` sub-module with `cd knowledge-driven-automl && git submodule init && git submodule update dev/Kdautoml`
  - get the [neo4j](https://neo4j.com/) docker image `docker image pull neo4j:4.2.3`
  - install/update all Julia package dependencies `julia --project=dev/Kdautoml -e "using Pkg; Pkg.add(url=\"https://github.com/dpsanders/SatisfiabilityInterface.jl\"); Pkg.update()"`
@@ -88,4 +88,4 @@ This code GPL v3, see `LICENSE.md`.
 
 
 ## Reporting Bugs
-At the moment the code is under heavy development and much of the API and features are subject to change ¯\\_(ツ)_/¯. Please [file an issue](https://gitlab.ai.vub.ac.be/ccofaru/knowledge-driven-automl/-/issues/new) to report a bug or request a feature.
+At the moment the code is under heavy development and much of the API and features are subject to change ¯\\_(ツ)_/¯. Please [file an issue](https://github.com/zgornel/knowledge-driven-automl/issues/new) to report a bug or request a feature.
