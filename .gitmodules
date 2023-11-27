@@ -1,3 +1,0 @@
-[submodule "dev/Kdautoml"]
-	path = dev/Kdautoml
-	url = https://gitlab.ai.vub.ac.be/applied-projects/Kdautoml.jl
