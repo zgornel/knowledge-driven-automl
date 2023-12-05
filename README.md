@@ -1,6 +1,6 @@
 # Knowledge-driven AutoML
 
-This is a repository that contains the knowledge bases and experimetal scripts for testing out [Kdautoml.jl](https://github.com/zgornel/Kdautoml.jl)
+This is a repository that contains the knowledge bases and experiments for testing out [Kdautoml.jl](https://github.com/zgornel/Kdautoml.jl)
 
 ## Installation
 The steps detailed below suppose that one has installed [docker](https://www.docker.com/), [julia](https://julialang.org/) on a unix-like system such as GNU/Linux.
@@ -86,6 +86,18 @@ Monitoring the pipeline building progress (pipeline space evolution) can be done
 ## License
 This code GPL v3, see `LICENSE.md`.
 
+## Publication
+The associated paper is ["A knowledge-driven AutoML architecture" (arxiv)](https://arxiv.org/abs/2311.17124). Cite as:
+```
+@misc{cofaru2023knowledgedriven,
+  title={A knowledge-driven AutoML architecture},
+  author={Corneliu Cofaru and Johan Loeckx},
+  year={2023},
+  eprint={2311.17124},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG}
+}
+```
 
 ## Reporting Bugs
 At the moment the code is under heavy development and much of the API and features are subject to change ¯\\_(ツ)_/¯. Please [file an issue](https://github.com/zgornel/knowledge-driven-automl/issues/new) to report a bug or request a feature.
