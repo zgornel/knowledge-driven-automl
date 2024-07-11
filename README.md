@@ -10,39 +10,16 @@ Installation can be performed by:
  - get the `Kdautoml` sub-module with `cd knowledge-driven-automl && git submodule init && git submodule update dev/Kdautoml`
  - get the [neo4j](https://neo4j.com/) docker image `docker image pull neo4j:4.2.3`
  - install/update all Julia package dependencies `julia --project=dev/Kdautoml -e "using Pkg; Pkg.add(url=\"https://github.com/dpsanders/SatisfiabilityInterface.jl\"); Pkg.update()"`
- - start container for pipeline synthesis knowledge base (replace `$FULL_PATH` with the actual full path to the current folder):
+ - start container for pipeline synthesis knowledge base. On the first run, the container script should be run:
    ```
-   docker run \
-    --detach \
-    --publish=7475:7474 \
-    --publish=7687:7687 \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_pipesynthesis_kb/data/:/data \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_pipesynthesis_kb/logs:/logs \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_pipesynthesis_kb/import:/var/lib/neo4j/import \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_pipesynthesis_kb/import:/var/lib/neo4j/import \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_pipesynthesis_kb/conf:/conf \
-    --env NEO4J_dbms_memory_pagecache_size=4G \
-    --env NEO4J_AUTH=neo4j/test \
-    --name neo4j_pipesynthesis_kb \
-    neo4j:4.2.3
+   ./docker/start_pipesynthesis_container.sh
    ```
- - start container for feature synthesis knowledge base (replace `$FULL_PATH` with the actual full path to the current folder):
+   Subsequently, one can start the container with `docker start neo4j_pipesynthesis_kb`.
+ - start container for feature synthesis knowledge base. On the first run, the container script should be run:
    ```
-   docker run \
-    --detach \
-    --publish=7475:7474 \
-    --publish=7688:7687 \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_featuresynthesis_kb/data/:/data \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_featuresynthesis_kb/logs:/logs \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_featuresynthesis_kb/import:/var/lib/neo4j/import \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_featuresynthesis_kb/import:/var/lib/neo4j/import \
-    --volume=$FULL_PATH/knowledge-driven-automl/data/db/neo4j_featuresynthesis_kb/conf:/conf \
-    --env NEO4J_dbms_memory_pagecache_size=4G \
-    --env NEO4J_AUTH=neo4j/test \
-    --name neo4j_featuresynthesis_kb \
-    neo4j:4.2.3
+   ./docker/start_featuresynthesis_container.sh
    ```
- - NOTE: Containers can be restarted using their name onlu i.e. `docker start neo4j_pipesynthesis_kb`
+   Subsequently, one can start the container with `docker start neo4j_featuresynthesis_kb`.
  - Add the data to the neo4j graph db instances runing in the containers with:
    ```
    julia ./dev/Kdautoml/scripts/fill_pipesynthesis_kb.jl ./data/knowledge/pipe_synthesis.toml &&
